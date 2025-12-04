@@ -1,0 +1,30 @@
+pipeline {
+
+    tools{
+       maven 'mymaven'
+    }
+
+    agent none
+
+    stages {
+
+       stage ('Backend'){
+		      agent {
+		              docker {image 'maven:3.3-jdk-8'}
+		              args '-v $HOME/.m2 : /root/.m2'      --- caching mechanism via volume mapping
+		      }
+		      steps {
+		           sh 'mvn --version'
+		      }
+	     }
+
+	     stage ('Frontend'){
+	        agent {
+	                docker {image 'node:iron-trixie-slim'}
+	        }
+	        steps {
+	            sh 'node --version'
+	        }
+	     }
+	   }
+	}
